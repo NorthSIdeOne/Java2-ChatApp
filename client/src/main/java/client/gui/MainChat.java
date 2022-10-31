@@ -88,6 +88,7 @@ public class MainChat extends JFrame implements ChatEventListener {
             @Override
             public void windowClosing(WindowEvent e) {
                 DispacherService.getInstance(username).removeListener(MainChat.this);
+                System.exit(0);
             }
         });
     }

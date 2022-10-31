@@ -55,7 +55,4 @@ public class ChatController {
     public void sendMessage(final MessageDTO message) throws RemoteException {
          chatService.sendMessage(message);
     }
-    public void refresh() throws RemoteException {
-        chatService.refresh();
-    }
 }

@@ -7,6 +7,8 @@ import client.services.ChatController;
 import lib.dto.UserDTO;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
@@ -43,6 +45,13 @@ public class LoginWindow extends JFrame {
         createAccountButton.addActionListener(ev -> {
             dispose();
             new CreateAccountWindow();
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
         });
 
         setContentPane(mainPanel);

@@ -4,7 +4,7 @@ import server.dao.DAO;
 import server.dao.DAOMechanism;
 import server.model.Account;
 import server.model.Chat;
-import server.model.User;
+
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -17,7 +17,6 @@ public class AccountDAO extends DAOMechanism implements DAO<Account> {
 
     public AccountDAO(EntityManager entityManager) {
         super(entityManager);
-       // entityManager.getEntityManagerFactory().getCache().evictAll();
     }
 
     @Override
@@ -77,18 +76,6 @@ public class AccountDAO extends DAOMechanism implements DAO<Account> {
         }
 
         return false;
-    }
-
-    /**
-     * Return a list with all usernames
-     * @return
-     */
-    public List<String> getAllUsers(){
-        TypedQuery<String > query = entityManager.createNamedQuery("Account.getAllUsernames",String.class);
-        final List<String> usernameList = new ArrayList<>();
-        query.getResultStream().forEach(usernameList::add);
-        return  usernameList;
-
     }
 
 

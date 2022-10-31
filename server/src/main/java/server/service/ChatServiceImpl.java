@@ -8,15 +8,11 @@ import lib.service.ChatService;
 import server.dao.EntityManagerInstance;
 import server.dao.impl.AccountDAO;
 import server.dao.impl.ChatDAO;
-import server.dao.impl.UserDAO;
 import server.model.Account;
 import server.model.Chat;
 import server.model.Message;
-import server.model.User;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +26,9 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
 
     public ChatServiceImpl() throws RemoteException {
         entityManager = EntityManagerInstance.getEntityManager();
-        AccountDAO accountDAO = new AccountDAO(entityManager);
-        List<String> allUsers = accountDAO.getAllUsers();
         eventService = new EventService();
-//        allUsers.stream()
-//                .peek(user -> System.out.println("CREAT EVENT QUEUE for{"+user+"}"))
-//                .forEach(eventService::createEventQueue);
     }
 
-
-    private void addUserToEventQueue(final String username){
-        eventService.createEventQueue(username);
-    }
     /**
      * Create a new chat instance for 2 users if they don't have any chat
      * @param sender the user which want to create the chat
@@ -55,11 +42,6 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         Optional<Account> senderAccount = accountDAO.findByUsername(sender.getUsername());
         Optional<Account> receiverAccount = accountDAO.findByUsername(receiver.getUsername());
 
-        System.out.println("Receiver : " + receiver.getUsername() + " SENDER: " + sender.getUsername());
-        System.out.println(accountDAO.getAllUsers());
-        if(senderAccount.isEmpty()){
-            System.out.println(" SENDER IS EMPTY ");
-        }
         if(senderAccount.isPresent()
                 && receiverAccount.isPresent()
                 && !accountDAO.checkIfChatExistBetweenUsers(sender.getUsername(), receiver.getUsername())){
@@ -74,6 +56,10 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         return null;
     }
 
+    /**
+     * Send a message to a user
+     * @param sentMessage the message to be sent
+     */
     @Override
     public void sendMessage(final MessageDTO sentMessage) throws RemoteException{
 
@@ -89,6 +75,10 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
     }
 
 
+    /**
+     * Return a list of chats for a user
+     * @param user the user who asked for all the chats
+     */
     @Override
     public List<ChatDTO> getAllChats(UserDTO user) throws RemoteException{
         final List<ChatDTO> chatList = new ArrayList<>();
@@ -103,6 +93,11 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         return chatList;
     }
 
+    /**
+     * Convert a list of  entities Message to DTO Message
+     * @param messages the messages to be converted
+     * @return
+     */
     private List<MessageDTO> convertMessageToMessageDTO(final List<Message> messages){
         List<MessageDTO> convertedMessaged = new ArrayList<>();
         messages.forEach(message -> {
@@ -113,30 +108,23 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         return convertedMessaged;
     }
 
-    @Override
-    public void notifyAllUsers() throws RemoteException {
-        eventService.nofityAllUsers();
-    }
-
+    /**
+     * Get all events for a user
+     * @param username the user which is getting the events
+     * @return
+     */
     @Override
     public List<ChatEvent> getEvents(String username) {
         return eventService.getEvents(username);
     }
 
-    @Override
-    public void refresh() {
-        this.entityManager.clear();
 
-    }
-
-
-    private Account findAccountByUsername(final String username){
-        AccountDAO accountDAO = new AccountDAO(this.entityManager);
-        Optional<Account> account = accountDAO.findByUsername(username);
-        return account.orElse(null);
-    }
-
-
+    /**
+     * Add a new chat
+     * @param sender the owner of the chat
+     * @param receiver the other participant of the chat
+     * @return
+     */
     private ChatDTO addNewChatToAccounts(final Account sender, final Account receiver){
 
         final AccountDAO accountDAO = new AccountDAO(this.entityManager);
@@ -147,7 +135,6 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         receiver.addChat(chat);
         accountDAO.save(sender);
         accountDAO.save(receiver);
-
 
         return new ChatDTO(chat.getChatId(), new ArrayList<>(),sender.getUsername(),receiver.getUsername());
     }

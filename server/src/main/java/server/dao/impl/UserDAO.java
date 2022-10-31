@@ -2,13 +2,10 @@ package server.dao.impl;
 
 import server.dao.DAO;
 import server.dao.DAOMechanism;
-import server.model.Account;
 import server.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class UserDAO extends DAOMechanism implements DAO<User> {
@@ -18,7 +15,6 @@ public class UserDAO extends DAOMechanism implements DAO<User> {
      */
     public UserDAO(final EntityManager entityManager){
         super(entityManager);
-      //  entityManager.getEntityManagerFactory().getCache().evictAll();
     }
 
     /**

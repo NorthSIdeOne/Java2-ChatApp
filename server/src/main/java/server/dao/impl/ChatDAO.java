@@ -3,7 +3,6 @@ package server.dao.impl;
 import server.dao.DAO;
 import server.dao.DAOMechanism;
 import server.model.Chat;
-import server.model.User;
 
 import javax.persistence.EntityManager;
 
@@ -15,7 +14,6 @@ public class ChatDAO extends DAOMechanism implements DAO<Chat> {
      */
     public ChatDAO(EntityManager entityManager) {
         super(entityManager);
-        //entityManager.getEntityManagerFactory().getCache().evictAll();
     }
 
     @Override
