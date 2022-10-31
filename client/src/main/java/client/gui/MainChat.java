@@ -17,6 +17,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -163,6 +165,7 @@ public class MainChat extends JFrame implements ChatEventListener {
         newMessage.setSender(this.username);
         newMessage.setReceiver(chatList.getSelectedValue().toString().trim());
         newMessage.setChatId(currentChatId);
+        newMessage.setTimeStamp(new Date());
         return newMessage;
     }
 
@@ -175,7 +178,8 @@ public class MainChat extends JFrame implements ChatEventListener {
         try {
             sendMessage(newMessage);
             getCurrentChat().ifPresent((Chat chat) -> {
-                chat.addMessage(new Message(currentChatId, newMessage.getSender(), newMessage.getMessage()));
+                chat.addMessage(new Message(currentChatId, newMessage.getSender(),
+                        newMessage.getMessage(), newMessage.getTimeStamp()));
                 addMessagesToChat();
                 typeMesasgeArea.setText("");
             });
@@ -229,7 +233,8 @@ public class MainChat extends JFrame implements ChatEventListener {
         final List<Message> convertedMessages = new ArrayList<>();
 
         messages.forEach((MessageDTO message) -> {
-            convertedMessages.add(new Message(message.getChatId(), message.getSender(), message.getMessage()));
+            convertedMessages.add(new Message(message.getChatId(),
+                    message.getSender(), message.getMessage(), message.getTimeStamp()));
         });
 
         return convertedMessages;
@@ -329,7 +334,8 @@ public class MainChat extends JFrame implements ChatEventListener {
         chatArea.setText("");
         getCurrentChat().ifPresent((Chat chat) -> {
             chat.getMessageList().forEach((Message message) -> {
-                chatArea.append(message.getUser() + " : " + message.getMessage() + "\n");
+                chatArea.append("("+new Timestamp(message.getTimeStamp().getTime())+")  " +
+                        message.getUser() + " : " + message.getMessage() + "\n");
             });
         });
 
@@ -392,9 +398,11 @@ public class MainChat extends JFrame implements ChatEventListener {
         final Optional<Chat> chat = getChat(event.getChatId());
 
         if (chat.isPresent()) {
-            chat.get().addMessage(new Message(event.getChatId(), event.getSender(), event.getMessage()));
+            chat.get().addMessage(new Message(event.getChatId(), event.getSender(),
+                    event.getMessage(), event.getTimestamp()));
             if(event.getChatId() == currentChatId){
-                chatArea.append(event.getSender() + " : " + event.getMessage() + "\n");
+                chatArea.append("("+new Timestamp(event.getTimestamp().getTime())+")  " +
+                        event.getSender() + " : " + event.getMessage() + "\n");
             }
         }
     }

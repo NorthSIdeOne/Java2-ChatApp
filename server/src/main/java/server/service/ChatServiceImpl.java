@@ -71,6 +71,7 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         chat.addMessage(message);
         chatDao.save(chat);
         sentMessage.setChatId(chat.getChatId());
+        sentMessage.setTimeStamp(message.getTimestamp());
         eventService.addNewMessageEvent(sentMessage);
     }
 
@@ -102,6 +103,7 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         List<MessageDTO> convertedMessaged = new ArrayList<>();
         messages.forEach(message -> {
             MessageDTO messageDTO = new MessageDTO(message.getMessage(),message.getUsername());
+            messageDTO.setTimeStamp(message.getTimestamp());
             convertedMessaged.add(messageDTO);
         });
 

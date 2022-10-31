@@ -1,15 +1,19 @@
 package client.models;
 
+import java.util.Date;
+
 public class Message {
 
     private int chatId;
     private String user;
     private String message;
+    private Date timeStamp;
 
-    public Message(int chatId, String user, String message) {
+    public Message(int chatId, String user, String message, Date timeStamp) {
         this.chatId = chatId;
         this.user = user;
         this.message = message;
+        this.timeStamp = timeStamp;
     }
 
     public int getChatId() {
@@ -34,5 +38,13 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

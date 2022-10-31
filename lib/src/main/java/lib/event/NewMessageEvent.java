@@ -2,6 +2,8 @@ package lib.event;
 
 import lib.dto.MessageDTO;
 
+import java.util.Date;
+
 /**
  * This class represent an event which is built when a new message is sent
  * between 2 users.
@@ -48,6 +50,10 @@ public class NewMessageEvent implements ChatEvent{
      */
     public int getChatId(){
         return this.message.getChatId();
+    }
+
+    public Date getTimestamp(){
+        return this.message.getTimeStamp();
     }
 
 }

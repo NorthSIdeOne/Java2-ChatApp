@@ -1,6 +1,7 @@
 package lib.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class MessageDTO implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -8,6 +9,8 @@ public class MessageDTO implements Serializable {
     private String sender;
     private String receiver;
     private int chatId;
+    private Date timeStamp;
+
 
     public MessageDTO(String message, String sender) {
         this.message = message;
@@ -48,5 +51,13 @@ public class MessageDTO implements Serializable {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

@@ -40,4 +40,8 @@ public class Message {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
 }
